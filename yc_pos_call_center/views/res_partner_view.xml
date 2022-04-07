@@ -1,0 +1,21 @@
+<odoo>
+    <record id="view_res_district_tree" model="ir.ui.view">
+        <field name="name">res.district.tree</field>
+        <field name="model">res.district</field>
+        <field name="arch" type="xml">
+            <tree string="District" editable="top">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_district_actions" model="ir.actions.act_window">
+        <field name="name">District</field>
+        <field name="res_model">res.district</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem parent="pos_retail.menu_master_data" name="District"
+            id="menu_district" action="res_district_actions"/>
+</odoo>

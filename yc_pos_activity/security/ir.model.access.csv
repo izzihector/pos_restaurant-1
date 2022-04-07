@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_activity_product,yc_pos_activity.activity_product,model_activity_product,,1,1,1,1
+access_activity_product_line,yc_pos_activity.activity_product_line,model_activity_product_line,,1,1,1,1
+access_special_product_lines,access_special_product_lines,model_special_product_lines,,1,1,1,1

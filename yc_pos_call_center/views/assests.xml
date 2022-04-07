@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="assets_backend" name="pos_retail assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/yc_pos_call_center/static/src/js/load_models.js"/>
+        </xpath>
+    </template>
+     <template id="pos_retail_assets" name="pos_retail assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/yc_pos_call_center/static/src/js/screen_booking_order.js"/>
+            <script type="text/javascript" src="/yc_pos_call_center/static/src/js/models.js"/>
+<!--            <script type="text/javascript" src="/yc_pos_call_center/static/src/js/booking_order_inherit.js"/>-->
+        </xpath>
+     </template>
+</odoo>

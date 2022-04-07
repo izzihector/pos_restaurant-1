@@ -1,0 +1,47 @@
+<odoo>
+	<record id="pos_order_inherit" model="ir.ui.view">
+	<field name="name">POS Order Inherit</field>
+	<field name="model">pos.order</field>
+	<field name="inherit_id" ref="yc_pos_activity.view_pos_pos_form"/>
+	<field name="arch" type="xml">
+		<xpath expr="//field[@name='activity_lines']" position="before">
+			<page name='inventory_deduction' string='Inventory Deduction'>
+				<header>
+					<field name='status_id' widget="statusbar"/>
+				</header>
+				<field name='pos_order_lines_ids' attrs="{'readonly':[('status_id','=','inventory_deducted')]}">
+					<tree editable='bottom' >
+						<field name="product_id" domain="[('sale_ok','=',True)]"/>
+						<field name="quantity"/>
+
+					</tree>
+				</field>
+				<group>
+					<button name='action_confrim' type='object' string='Confrim' class='oe_highlight' attrs="{'invisible':[('status_id','=','inventory_deducted')]}"/>
+					<button name='action_reset' type='object' string='Reset' class='oe_highlight' attrs="{'invisible':[('status_id','=','draft')]}"/>
+				</group>
+			</page>
+		</xpath>
+<!--		<xpath expr="//page[@name='extra']" position="after">-->
+<!--			<page name='inventory_deduction' string='Inventory Deduction'>-->
+<!--				<header>-->
+<!--					<field name='status_id' widget="statusbar"/>-->
+<!--				</header>-->
+<!--				<field name='pos_order_lines_ids' attrs="{'readonly':[('status_id','=','inventory_deducted')]}">-->
+<!--					<tree editable='bottom' >-->
+<!--						<field name="product_id" domain="[('sale_ok','=',True)]"/>-->
+<!--						<field name="quantity"/>-->
+
+<!--					</tree>-->
+<!--				</field>-->
+<!--				<group>-->
+<!--					<button name='action_confrim' type='object' string='Confrim' class='oe_highlight' attrs="{'invisible':[('status_id','=','inventory_deducted')]}"/>-->
+<!--					<button name='action_reset' type='object' string='Reset' class='oe_highlight' attrs="{'invisible':[('status_id','=','draft')]}"/>-->
+<!--				</group>-->
+<!--			</page>-->
+<!--		</xpath>-->
+	</field>
+	</record>
+
+
+</odoo>

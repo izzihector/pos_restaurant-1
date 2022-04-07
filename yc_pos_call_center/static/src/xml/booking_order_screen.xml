@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="PosTicket">
+        <t t-jquery="t[t-if*='order.delivery_address']" t-operation="replace">
+            <t t-if="order.delivery_address">
+                <div class="receipt-user">
+                    Shipping to : <t t-esc="order.get_partner_addresses_from_id(order.delivery_address).address"/>
+                </div>
+            </t>
+        </t>
+    </t>
+
+
+    <t t-name="popup_create_booking_order">
+        <div class="modal-dialog">
+            <div class="popup touch-scrollable scrollable-y" style="height: 800px">
+                <t t-if="widget.pos.get_order() and widget.pos.get_order().get_client()">
+                    <div class="card">
+                        <div class="card-content">
+                            <h4 class="card-title">
+                                Please input Delivery Information
+                            </h4>
+                            <div class="row">
+                                <span class="label voucher-label">Amount total</span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <input class='form-control' t-att-value="widget.format_currency(widget.pos.get_order().get_total_with_tax())" hidden="hidden" disabled="disabled"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class="label voucher-label">Phone <span class="input-required"> (*) </span></span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <input class='form-control booking_field class_delivery_phone' t-att-value='widget.pos.get_order().get_client().mobile || widget.pos.get_order().get_client().phone' name="delivery_phone"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class='label voucher-label'>Delivery Address <span class="input-required"> (*) </span></span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <select class='booking_field form-control voucher-select partner_input class_delivery_address' style="width:80%" name='delivery_address'>
+                                            <option value=''>None</option>
+                                            <option t-att-value='widget.pos.get_order().get_client().id'>
+                                                <t t-esc='widget.pos.get_order().delivery_address || widget.pos.get_order().get_client().address'/>
+                                            </option>
+                                            <t t-foreach='widget.pos.get_order().get_partner_addresses(widget.pos.get_order().get_client())' t-as='del_address'>
+                                                <t t-if="del_address">
+                                                    <option t-att-value='del_address.id'>
+                                                        <t t-esc='del_address.address'/>
+                                                    </option>
+                                                </t>
+<!--                                                t-att-selected="(widget.options.pricelist and pricelist.id === widget.options.pricelist['id']) ? true : undefined"-->
+
+                                            </t>
+                                        </select>
+                                        <span><i class="fa fa-plus" style="font-size:32px;color:red;border:1px solid black;"></i></span>
+                                    </div>
+<!--                                    <div class="form-group label-floating is-empty">-->
+<!--                                        <t t-log="widget.pos.get_order().get_partner_addresses(widget.pos.get_order().get_client())"/>-->
+<!--                                        <input type="text" class="form-control booking_field" name="delivery_address" t-att-value="widget.pos.get_order().get_partner_addresses()"/>-->
+<!--                                    </div>-->
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class='label voucher-label'>Branch</span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <select class='booking_field form-control voucher-select partner_input class_district_branch' name='branch'>
+                                            <t t-foreach='widget.pos.branch' t-as='branch'>
+                                                <option t-att-value='branch.id'>
+                                                    <t t-esc='branch.name'/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class='label voucher-label'>Stock Location</span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <select class='booking_field form-control voucher-select partner_input class_branch_location' name='location'>
+                                            <t t-foreach='widget.pos.stock_locations' t-as='location'>
+                                                <option t-att-value='location.id'>
+                                                    <t t-esc='location.name'/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                        <center>
+                                            <div class="btn btn-success class_set_address" style="width:50%;">
+                                                <i class="fa fa-check"/> Set Delivery Address
+                                            </div>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class='label voucher-label'>Delivery date <i class="fa fa-calendar"></i></span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <input type="text" class="form-control datetimepicker booking_field class_delivery_date" name="delivery_date" t-att-value="widget.pos.get_order().delivery_date || new Date()"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class="label voucher-label">Notes</span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <input class='form-control booking_field class_delivery_note' name="note" t-att-value="widget.pos.get_order().note"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <t t-if="widget.pos.config.booking_orders_required_cashier_signature">
+                                <div class="row">
+                                    <span class="label voucher-label">Signature <span class="input-required"> (*) </span></span>
+                                    <div class="col-sm-10">
+                                        <div class="pos_signature" name="pos_signature"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <div class="row">
+                                <span class="label voucher-label">PriceList <span class="input-required"> (*)</span></span>
+                                <div class="col-sm-10">
+                                     <select class='booking_field form-control voucher-select class_delivery_pricelist' name='pricelist_id' id="pricelist_id">
+                                        <t t-if="widget.pos.pricelists">
+                                            <t t-foreach='widget.pos.pricelists' t-as='pricelist'>
+                                                <option t-att-value='pricelist.id' t-att-selected="pricelist['id'] ? ((widget.options.pricelist and pricelist.id === widget.options.pricelist['id']) ? true : undefined) : undefined">
+                                                    <t t-esc='pricelist.name'/>
+                                                </option>
+                                            </t>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class="label voucher-label">Payment partial amount</span>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <input type='number' class='form-control booking_field class_delivery_amount' name="payment_partial_amount"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class="label voucher-label">Payment Partial Journal</span>
+                                <div class="col-sm-10">
+                                     <select class='form-control voucher-select booking_field class_delivery_journal_id' name='payment_partial_journal_id' id="payment_partial_journal_id">
+                                        <t t-if="widget.pos.cashregisters">
+                                            <t t-foreach='widget.pos.cashregisters' t-as='cashregister'>
+                                                <option t-att-value='cashregister.journal_id[0]'>
+                                                    <t t-esc='cashregister.journal_id[1]'/>
+                                                </option>
+                                            </t>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="label voucher-label" style="margin-left: 10px">Payment Method</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group label-floating is-empty">
+                                        <select class='form-control voucher-select booking_field class_delivery_payment_method' name='payment_method_id' id="payment_method_id">
+                                            <t t-if="widget.pos.payment_methods">
+                                                <t t-foreach='widget.pos.payment_methods' t-as='method'>
+                                                    <option t-att-value='method.id'>
+                                                        <t t-esc='method.name'/>
+                                                    </option>
+                                                </t>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="card-issue"/>
+                            <div class="form-footer text-right">
+                                <div class="btn btn-success pull-right confirm">
+                                    <i class="fa fa-check"/> Accept
+                                </div>
+                                <div class="btn btn-danger pull-left cancel">
+                                    Close
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
